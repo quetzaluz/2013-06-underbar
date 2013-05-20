@@ -2,23 +2,29 @@ var returnArguments = function(){ return arguments; };
 
 describe("last", function() {
   it("should pull the last element from an array", function() {
-	  var Last1 = function (context, myParameters) {
-		var arr = arguments[0]
-		return arr[arr.length -1];
-	  };
-	  _.last = Last1;
+	var Last1 = function (context, myParameter) {
+      var arr = []
+      if (Array.isArray(arguments[0])) {arr = (arguments[0]).slice()}
+	  else if (arguments[0].length === +arguments[0].length) {
+	    for (var i = 0; i < arguments[0].length; i++){
+	      arr.push(arguments[0][i])
+	    }
+	  }
+	  if (arguments[1] || arguments[1] === 0) {
+	    var index = arguments[1]
+	    if (index > arr.length) {
+	      index = arr.length;
+	    }
+	    return arr.slice((arr.length - index), arr.length)
+	  } else {
+	    return arr[arr.length - 1]
+	  }
+	}
+	_.last = Last1; 
     expect(_.last([1,2,3])).to.equal(3);
   });
 
   it("should accept an index argument", function() {
-	  var Last2 = function (context, myParameters) {
-	  //array as first argument, index to slice from second arg
-	  var arr = arguments[0];
-	  var index = arguments[1];
-	  return arr.slice(arr.length - (index), arr.length)
-	  }
-	  _.last = Last2;
-	
 	expect(_.last([1,2,3], 2)).to.eql([2, 3]);
   });
 
@@ -27,44 +33,38 @@ describe("last", function() {
   });
 
   it("should return all the array's elements if the index argument is larger than the length of the array", function() {
-	var Last3 = function (context, myParameters) {
-	var arr = arguments[0];
-	var index = arguments[1];
-	  if (index > arr.length) {
-	    index = arr.length;
-	  }
-	return arr.slice(arr.length - (index), arr.length)
-	}
-	  _.last = Last3;
     expect(_.last([1,2,3], 5)).to.eql([1, 2, 3]);
   });
 
   it("should work on an arguments object", function() {
-    var args = returnArguments(1, 2, 3, 4);
-    var Last4 = function (context, myParameter) {
-	var arr = [];
-    if (Array.isArray(arguments[0])) return arr = slice.call(arguments[0]);
-	if (arguments[0].length === +arguments[0].length) {
-	  for (var i = 0; i < arguments[0].length; i++){
-	  arr.push(arguments[0][i])
-	  }
-	}
-	var index = arguments[1];
-	  if (index > arr.length) {
-	    index = arr.length;
-	  } 
-	  return arr.slice((arr.length - index), arr.length) 
-	}
-	_.last = Last4;
+    var args = returnArguments(1, 2, 3, 4); 
 	expect(_.last(args, 2)).to.eql([3, 4]);
   });
 
 });
 
-/*
 
 describe("first", function() {
   it("should be able to pull out the first element of an array", function() {
+	var First1 = function (context, myParameter) {
+      var arr = []
+      if (Array.isArray(arguments[0])) {arr = (arguments[0]).slice()}
+	  else if (arguments[0].length === +arguments[0].length) {
+	    for (var i = 0; i < arguments[0].length; i++){
+	      arr.push(arguments[0][i])
+	    }
+	  }
+	  if (arguments[1] || arguments[1] === 0) {
+	    var index = arguments[1]
+	    if (index > arr.length) {
+	      index = arr.length;
+	    }
+	    return arr.slice(0, index)
+	  } else {
+	    return arr[0]
+	  }
+	}
+	_.first = First1; 
     expect(_.first([1,2,3])).to.equal(1);
   });
 
@@ -80,6 +80,8 @@ describe("first", function() {
   });
 
 });
+
+/*
 
 describe("each", function() {
   it("should provide value and iteration count", function() {
