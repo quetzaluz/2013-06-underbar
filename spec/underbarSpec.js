@@ -2,11 +2,24 @@ var returnArguments = function(){ return arguments; };
 
 describe("last", function() {
   it("should pull the last element from an array", function() {
+	  var Last1 = function (context, myParameters) {
+		var arr = arguments[0]
+		return arr[arr.length -1];
+	  };
+	  _.last = Last1;
     expect(_.last([1,2,3])).to.equal(3);
   });
 
   it("should accept an index argument", function() {
-    expect(_.last([1,2,3], 2)).to.eql([2, 3]);
+	  var Last2 = function (context, myParameters) {
+	  //array as first argument, index to slice from second arg
+	  var arr = arguments[0];
+	  var index = arguments[1];
+	  return arr.slice(arr.length - (index), arr.length)
+	  }
+	  _.last = Last2;
+	
+	expect(_.last([1,2,3], 2)).to.eql([2, 3]);
   });
 
   it("should return nothing if zero is passed in as the index", function() {
