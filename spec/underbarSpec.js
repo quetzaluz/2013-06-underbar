@@ -27,12 +27,36 @@ describe("last", function() {
   });
 
   it("should return all the array's elements if the index argument is larger than the length of the array", function() {
+	var Last3 = function (context, myParameters) {
+	var arr = arguments[0];
+	var index = arguments[1];
+	  if (index > arr.length) {
+	    index = arr.length;
+	  }
+	return arr.slice(arr.length - (index), arr.length)
+	}
+	  _.last = Last3;
     expect(_.last([1,2,3], 5)).to.eql([1, 2, 3]);
   });
 
   it("should work on an arguments object", function() {
     var args = returnArguments(1, 2, 3, 4);
-    expect(_.last(args, 2)).to.eql([3, 4]);
+    var Last4 = function (context, myParameter) {
+	var arr = [];
+    if (Array.isArray(arguments[0])) return arr = slice.call(arguments[0]);
+	if (arguments[0].length === +arguments[0].length) {
+	  for (var i = 0; i < arguments[0].length; i++){
+	  arr.push(arguments[0][i])
+	  }
+	}
+	var index = arguments[1];
+	  if (index > arr.length) {
+	    index = arr.length;
+	  } 
+	  return arr.slice((arr.length - index), arr.length) 
+	}
+	_.last = Last4;
+	expect(_.last(args, 2)).to.eql([3, 4]);
   });
 
 });
