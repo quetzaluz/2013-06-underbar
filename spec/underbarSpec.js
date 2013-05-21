@@ -81,12 +81,20 @@ describe("first", function() {
 
 });
 
-/*
-
 describe("each", function() {
   it("should provide value and iteration count", function() {
     var letters = ['a', 'b', 'c'];
     var iterations = [];
+    var Each1 = function(obj, iterator, context) {
+      if (obj == null) return; 
+      if (obj.length === +obj.length) {
+        for (var i = 0; i < obj.length; i++) {
+          if(iterator.call(context, obj[i], i, obj)) return;
+		}
+	  }
+	};
+
+    _.each = Each1;
 
     _.each(letters, function(letter, index, collection) {
       iterations.push([letter, index, collection]);
@@ -100,6 +108,7 @@ describe("each", function() {
   });
 });
 
+/*
 describe("indexOf", function() {
 
   it("should be able to compute indexOf even when the native function is undefined", function() {
