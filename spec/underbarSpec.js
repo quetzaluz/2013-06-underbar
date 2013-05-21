@@ -265,7 +265,7 @@ describe("map", function() {
   });
 });
 
-/*
+
 describe("pluck", function() {
   it("should return values contained at a user-defined property", function() {
     var people = [
@@ -273,10 +273,16 @@ describe("pluck", function() {
       {name : 'curly', age : 50}
     ];
 
+	var Pluck1 = function (arr, key, context) {
+	  return _.map(arr, function(value) {return value[key];});
+	}
+	_.pluck = Pluck1;
+
     expect(_.pluck(people, 'name')).to.eql(['moe', 'curly']);
   });
 });
 
+/*
 describe("invoke", function() {
   it("should sort the first array", function() {
     var lists = [[5, 1, 7], [3, 2, 1]];
