@@ -179,11 +179,25 @@ describe("filter", function() {
   });
 });
 
-/*
+
 describe("reject", function() {
   it("should reject all even numbers", function() {
     var isEven = function(num) { return num % 2 === 0; };
-    var odds = _.reject([1, 2, 3, 4, 5, 6], isEven);
+    
+	var Reject1 = function (arr, iterator, context) {
+	  var results = [];
+	  if (arr === null) return results;
+	  _.each(arr, function(value, index, list) {
+	    if (!iterator.call(context, value, index, list)) 
+		  {results[results.length] = value;}
+	  });
+	  return results;
+	}
+
+	_.reject = Reject1;
+
+
+	var odds = _.reject([1, 2, 3, 4, 5, 6], isEven);
     expect(odds).to.eql([1, 3, 5]);
   });
 
@@ -194,6 +208,7 @@ describe("reject", function() {
   });
 });
 
+/*
 describe("uniq", function() {
   it("should return all unique values contained in an unsorted array", function() {
     var list = [1, 2, 1, 3, 1, 4];
