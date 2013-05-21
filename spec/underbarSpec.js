@@ -2,7 +2,8 @@ var returnArguments = function(){ return arguments; };
 
 describe("last", function() {
   it("should pull the last element from an array", function() {
-	var Last1 = function (context, myParameter) {
+	var Last1 = function (context, myParameters) {
+	  //I use myParamaters for .last and .first, specify in later methods. I think it's unreliable to ref args by index
       var arr = []
       if (Array.isArray(arguments[0])) {arr = (arguments[0]).slice()}
 	  else if (arguments[0].length === +arguments[0].length) {
@@ -253,7 +254,8 @@ describe("map", function() {
 	  var results = [];
 	  if (arr === null) return results;
 	  _.each(arr, function(value, index, list) {
-	    results[results.length] = iterator.call(context, value, index, list);
+	    //results[results.length] used to insert callback result as it iterates
+		results[results.length] = iterator.call(context, value, index, list);
 	  });
 	  return results;
 	}
@@ -343,10 +345,20 @@ describe("invoke with function reference", function() {
   });
 });
 
-/*
+
 describe("reduce", function() {
   it("should be able to sum up an array", function() {
-    var callback = function(sum, num) {return sum + num; };
+    //In progress
+	var Reduce1 = function (arr, callback, initial) {
+	  if (arr === null) arr = [];
+	  _.each(arr, function(value, index, list) {
+	    if (initial) {
+		} else {
+		}
+	  });
+	}
+	  
+	  var callback = function(sum, num) {return sum + num; };
     var sum = _.reduce([1, 2, 3], callback, 0);
     expect(sum).to.equal(6);
   });
@@ -360,6 +372,7 @@ describe("reduce", function() {
 
 });
 
+/*
 describe("contains", function() {
   it("should return true if a collection contains a user-specified value", function() {
     expect(_.contains([1,2,3], 2)).to.equal(true);
