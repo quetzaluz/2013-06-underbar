@@ -314,11 +314,25 @@ describe("invoke", function() {
   });
 });
 
-/*
+
 describe("invoke with function reference", function() {
   it("should sort the first array", function() {
     var list = [[5, 1, 7], [3, 2, 1]];
-    var result = _.invoke(list, Array.prototype.sort);
+    
+	var Invoke2 = function (arr, func) {
+	  var args = arguments[2]
+	  var isFunc = function (func) {
+	    return typeof func === 'function';
+	  }
+	  return _.map(arr, function (value) {
+	    return (isFunc ? func: value[func]).apply(value, args);
+	  }); 
+	};
+
+	_.invoke = Invoke2;
+
+	
+	var result = _.invoke(list, Array.prototype.sort);
     expect(result[0]).to.eql([1, 5, 7]);
   });
 
@@ -329,6 +343,7 @@ describe("invoke with function reference", function() {
   });
 });
 
+/*
 describe("reduce", function() {
   it("should be able to sum up an array", function() {
     var callback = function(sum, num) {return sum + num; };
