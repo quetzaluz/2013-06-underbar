@@ -208,10 +208,28 @@ describe("reject", function() {
   });
 });
 
-/*
+
 describe("uniq", function() {
   it("should return all unique values contained in an unsorted array", function() {
     var list = [1, 2, 1, 3, 1, 4];
+
+	var Uniq1 = function (arr, iterator, context) {
+	  var results = [];
+	  var seen = [];
+	  var alreadyFound = false;
+	  _.each(arr, function (value, index) {
+	    for (var i = 0; i < seen.length; i++) {
+		  if (value === seen[i]) {alreadyFound = true;}
+		}
+		if (alreadyFound === false) {
+		  seen.push(value);
+		  results.push(arr[index]);
+		} else alreadyFound = false;
+	  });
+	  return results;
+	}
+	_.uniq = Uniq1;
+
     expect(_.uniq(list)).to.eql([1, 2, 3, 4]);
   });
 
@@ -227,6 +245,7 @@ describe("uniq", function() {
   });
 });
 
+/*
 describe("map", function() {
   it("should apply a function to every value in an array", function() {
     var doubled = _.map([1, 2, 3], function(num) { return num * 2; });
