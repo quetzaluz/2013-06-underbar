@@ -245,14 +245,27 @@ describe("uniq", function() {
   });
 });
 
-/*
+
 describe("map", function() {
   it("should apply a function to every value in an array", function() {
+    
+	var Map1 = function (arr, iterator, context) {
+	  var results = [];
+	  if (arr === null) return results;
+	  _.each(arr, function(value, index, list) {
+	    results[results.length] = iterator.call(context, value, index, list);
+	  });
+	  return results;
+	}
+
+	_.map = Map1;
+
     var doubled = _.map([1, 2, 3], function(num) { return num * 2; });
     expect(doubled).to.eql([2, 4, 6]);
   });
 });
 
+/*
 describe("pluck", function() {
   it("should return values contained at a user-defined property", function() {
     var people = [
