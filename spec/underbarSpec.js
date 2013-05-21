@@ -108,12 +108,22 @@ describe("each", function() {
   });
 });
 
-/*
+
 describe("indexOf", function() {
+
 
   it("should be able to compute indexOf even when the native function is undefined", function() {
     var numbers = [1, 2, 3];
     numbers.indexOf = null;
+	var IndexOf1 = function (arr, item) {
+	  if (arr === null) return -1;
+	  var occ = 0; // Added this because had trouble returning -1
+	  for(var i = 0; i < arr.length; i++) {
+	    if (arr[i] === item) {occ += 1; return i;}
+	  }
+	  if (occ === 0) return -1;
+	};
+	_.indexOf = IndexOf1;
     expect(_.indexOf(numbers, 2)).to.be(1);
   });
 
@@ -138,6 +148,7 @@ describe("indexOf", function() {
   });
 });
 
+/*
 describe("filter", function() {
   it("should return all even numbers in an array", function() {
     var isEven = function(num) {
