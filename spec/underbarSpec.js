@@ -148,12 +148,24 @@ describe("indexOf", function() {
   });
 });
 
-/*
+
 describe("filter", function() {
   it("should return all even numbers in an array", function() {
     var isEven = function(num) {
       return num % 2 === 0;
     };
+	var Filter1 = function (arr, iterator, context) {
+	  var results = [];
+	  if (arr === null) return results;
+	  _.each(arr, function(value, index, list) {
+	    if (iterator.call(context, value, index, list)) 
+		  {results[results.length] = value;}
+	  });
+	  return results;
+	}
+
+	_.filter = Filter1;
+
     var evens = _.filter([1, 2, 3, 4, 5, 6], isEven);
     expect(evens).to.eql([2, 4, 6]);
   });
@@ -167,6 +179,7 @@ describe("filter", function() {
   });
 });
 
+/*
 describe("reject", function() {
   it("should reject all even numbers", function() {
     var isEven = function(num) { return num % 2 === 0; };
