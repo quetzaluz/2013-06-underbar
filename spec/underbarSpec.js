@@ -350,15 +350,21 @@ describe("reduce", function() {
   it("should be able to sum up an array", function() {
     //In progress
 	var Reduce1 = function (arr, callback, initial) {
+	  var memo = null;
 	  if (arr === null) arr = [];
 	  _.each(arr, function(value, index, list) {
-	    if (initial) {
-		} else {
+	    if (!initial) {
+		initial = true
+		memo = 0;
 		}
+		memo = callback.call(context, memo, value, index, list);
 	  });
+	  return memo
 	}
-	  
-	  var callback = function(sum, num) {return sum + num; };
+
+	_.reduce = Reduce1;
+
+	var callback = function(sum, num) {return sum + num; };
     var sum = _.reduce([1, 2, 3], callback, 0);
     expect(sum).to.equal(6);
   });
