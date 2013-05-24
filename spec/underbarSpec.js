@@ -596,9 +596,22 @@ describe("defaults", function() {
   });
 });
 
-/*
+
 describe("once", function() {
   it("should only run a user-defined function if it hasn't been run before", function() {
+    var Once1 = function (func) {
+	  var hasRun = false, memo
+	  return function () {
+	    if (hasRun) return memo;
+		hasRun = true;
+		memo = func.apply(this, arguments);
+		func = null;
+		return memo;
+	  }
+	}
+
+	_.once = Once1;
+
     var num = 0;
     var increment = _.once(function() {
       num++;
@@ -610,6 +623,7 @@ describe("once", function() {
   });
 });
 
+/*
 describe("memoize", function() {
   it("a memoized function should produce the same result when called with the same arguments", function() {
     var fib = function(n) {
