@@ -623,10 +623,22 @@ describe("once", function() {
   });
 });
 
-/*
+
 describe("memoize", function() {
   it("a memoized function should produce the same result when called with the same arguments", function() {
-    var fib = function(n) {
+    //This won't resemble underscore.js w/hasher but I think 
+	//I can write this function in a way that resembles .once
+	var Memoize1 = function (func) {
+	  var memo;
+	  return function () {
+	    memo = func.apply(this, arguments);
+		return memo;
+	  };
+	}
+
+	_.memoize = Memoize1;
+	  
+	var fib = function(n) {
       return n < 2 ? n : fib(n - 1) + fib(n - 2);
     };
     expect(fib(10)).to.equal(55);
@@ -645,7 +657,7 @@ describe("memoize", function() {
     expect(fastPassThrough('toString')).to.equal('toString');
   });
 });
-*/
+
 
 describe("delay", function() {
   var clock, delayed, callback;
@@ -688,7 +700,7 @@ describe("shuffle", function() {
 	var Shuffle1 = function (arr, context) {
 	  var arr2 = arr;
       //trying a shuffle method I found on stack overflow.
-	  //underscore.js uses its own shuffle method
+	  //underscore.js uses its own shuffle method _.shuffle
 	  var counter = arr.length, temp, index;
       while (counter > 0) {
 	    //swap last element with a random element
