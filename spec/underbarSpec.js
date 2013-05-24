@@ -348,7 +348,6 @@ describe("invoke with function reference", function() {
 
 describe("reduce", function() {
   it("should be able to sum up an array", function() {
-    //In progress
 	var Reduce1 = function (arr, callback, initial) {
 	  var memo = null;
 	  if (arr === null) arr = [];
@@ -378,11 +377,22 @@ describe("reduce", function() {
 
 });
 
-/*
+
 describe("contains", function() {
   it("should return true if a collection contains a user-specified value", function() {
+	var Contains1 = function (arr, key, context) {
+	  var result = false;
+	  _.each(arr, function(value, index, list) {
+		if (key == value) return result = true;
+	  });
+	  return result;
+	}
+	_.contains = Contains1;
+	
     expect(_.contains([1,2,3], 2)).to.equal(true);
-    expect(_.contains({moe:1, larry:3, curly:9}, 3)).to.equal(true);
+    //evals to true
+	expect(_.contains({moe:1, larry:3, curly:9}, 3)).to.equal(true);
+	//found it difficult to have the above eval to true
   });
 
   it("should return false if a collection does not contain a user-specified value", function() {
@@ -390,7 +400,19 @@ describe("contains", function() {
   });
 });
 
+
 describe("every", function() {
+  var Every1 = function (arr, iterator, context) {
+    var result = true;
+    _.each(arr, function(value, index, list) {
+	  //if one fails to be the result, return false
+	  if (result != iterator.call(context, value, index, list)) result = false;
+	});
+	return result;
+  }
+
+  _.every = Every1;
+		
   var getValue = function(i) { return i; };
   var isEven = function(num) { return num % 2 === 0; };
 
@@ -443,6 +465,12 @@ describe("any", function() {
     Array.prototype.some = nativeSome;
   });
 
+  var Any1 = function () {
+  
+  }
+
+  _.any = Any1;
+
   it("should handle the empty set", function() {
     expect(_.any([])).to.equal(false);
   });
@@ -480,6 +508,7 @@ describe("any", function() {
   });
 });
 
+/*
 describe("extend", function() {
   it("should extend an object with the attributes of another", function() {
     var extended = _.extend({}, {a:'b'});
