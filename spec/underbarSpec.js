@@ -1,3 +1,7 @@
+//Adding this helper function for undefined iterators
+var Identity1 = function (value) {return value;}
+_.identity = Identity1;
+
 var returnArguments = function(){ return arguments; };
 
 describe("last", function() {
@@ -449,8 +453,7 @@ describe("every", function() {
   });
 });
 
-/*
- * Found this one to be difficult, skipped for now
+
 describe("any", function() {
   var nativeSome = Array.prototype.some;
   var isEven = function(number){
@@ -467,8 +470,15 @@ describe("any", function() {
     Array.prototype.some = nativeSome;
   });
 
-  var Any1 = function () {
-  
+  var Any1 = function (obj, iterator, context) {
+    //see if at least one item in array matches truth test.
+    if (!iterator){iterator = _.identity}
+    var result = false;
+    if (obj == null) return result;
+    _.each(obj, function(value, index, list) {
+      if (!!result != true) result = iterator.call(context, value, index, list)
+    });
+    return !!result; //should be true if at least one is true
   }
 
   _.any = Any1;
@@ -510,7 +520,6 @@ describe("any", function() {
   });
 });
 
-*/
 describe("extend", function() {
   it("should extend an object with the attributes of another", function() {
 
