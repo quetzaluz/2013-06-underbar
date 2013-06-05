@@ -1,6 +1,7 @@
-//Adding this helper function for undefined iterators
+//Adding this function for undefined iterators
 var Identity1 = function (value) {return value;}
 _.identity = Identity1;
+
 
 var returnArguments = function(){ return arguments; };
 
@@ -384,17 +385,24 @@ describe("reduce", function() {
 
 describe("contains", function() {
   it("should return true if a collection contains a user-specified value", function() {
-	var Contains1 = function (arr, key, context) {
-	  var result = false;
-	  _.each(arr, function(value, index, list) {
-		if (key == value) return result = true;
-	  });
-	  return result;
+	var Contains1 = function (obj, target, context) {
+    var result = false;
+	  if (obj == null) return result;
+    //Following added because had trouble comparing object props
+     for(var prop in obj) {
+      if(obj.hasOwnProperty(prop) && obj[prop] === target) {
+          result = true;
+        }
+    }
+	  _.any(obj, function(value) {
+      if(target === value) result = true;
+    });
+    return !!result;
 	}
 	_.contains = Contains1;
 	
     expect(_.contains([1,2,3], 2)).to.equal(true);
-    //evals to true
+    //evals to true without native function
 	expect(_.contains({moe:1, larry:3, curly:9}, 3)).to.equal(true);
 	//found it difficult to have the above eval to true
   });
@@ -475,6 +483,8 @@ describe("any", function() {
     if (!iterator){iterator = _.identity}
     var result = false;
     if (obj == null) return result;
+    //Not needed, but below uses native function if available:
+    if (nativeSome && obj.some === nativeSome) return obj.some(iterator, context);
     _.each(obj, function(value, index, list) {
       if (!!result != true) result = iterator.call(context, value, index, list)
     });
@@ -834,3 +844,94 @@ describe("difference", function() {
 });
 
 */
+
+//Because I had so much trouble in finding equality in object
+//values for _.contains, I've implemented code neccessary for
+//_.isEqual to allow for deep comparisons
+
+var eq = function(a, b, aStack, bStack) {
+
+if (a === b) return a !== 0 || 1 / a == 1 / b;
+
+if (a == null || b == null) return a === b;
+
+if (a instanceof _) a = a._wrapped;
+    if (b instanceof _) b = b._wrapped;
+
+var className = toString.call(a);
+    if (className != toString.call(b)) return false;
+    switch (className) {
+
+case '[object String]':
+ 
+return a == String(b);
+      case '[object Number]':
+ 
+return a != +a ? b != +b : (a == 0 ? 1 / a == 1 / b : a == +b);
+      case '[object Date]':
+      case '[object Boolean]':
+ 
+return +a == +b;
+ 
+case '[object RegExp]':
+        return a.source == b.source &&
+               a.global == b.global &&
+               a.multiline == b.multiline &&
+               a.ignoreCase == b.ignoreCase;
+    }
+    if (typeof a != 'object' || typeof b != 'object') return false;
+ 
+var length = aStack.length;
+    while (length--) {
+ 
+if (aStack[length] == a) return bStack[length] == b;
+    }
+ 
+aStack.push(a);
+    bStack.push(b);
+    var size = 0, result = true;
+
+ 
+if (className == '[object Array]') {
+ 
+size = a.length;
+      result = size == b.length;
+      if (result) {
+ 
+while (size--) {
+          if (!(result = eq(a[size], b[size], aStack, bStack))) break;
+        }
+      }
+    } else {
+ 
+var aCtor = a.constructor, bCtor = b.constructor;
+      if (aCtor !== bCtor && !(_.isFunction(aCtor) && (aCtor instanceof aCtor) &&
+                               _.isFunction(bCtor) && (bCtor instanceof bCtor))) {
+        return false;
+      }
+ 
+for (var key in a) {
+        if (_.has(a, key)) {
+
+size++;
+ 
+if (!(result = _.has(b, key) && eq(a[key], b[key], aStack, bStack))) break;
+        }
+      }
+ 
+if (result) {
+        for (key in b) {
+          if (_.has(b, key) && !(size--)) break;
+        }
+        result = !size;
+      }
+    }
+ 
+aStack.pop();
+    bStack.pop();
+    return result;
+  };
+ 
+_.isEqual = function(a, b) {
+    return eq(a, b, [], []);
+  };
