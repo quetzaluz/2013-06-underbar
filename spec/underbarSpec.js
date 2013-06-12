@@ -1,32 +1,8 @@
-//Adding this function for undefined iterators
-var Identity1 = function (value) {return value;}
-_.identity = Identity1;
-
-
 var returnArguments = function(){ return arguments; };
 
 describe("last", function() {
   it("should pull the last element from an array", function() {
-	var Last1 = function (context, myParameters) {
-	  //I use myParamaters for .last and .first, specify in later methods. I think it's unreliable to ref args by index
-      var arr = []
-      if (Array.isArray(arguments[0])) {arr = (arguments[0]).slice()}
-	  else if (arguments[0].length === +arguments[0].length) {
-	    for (var i = 0; i < arguments[0].length; i++){
-	      arr.push(arguments[0][i])
-	    }
-	  }
-	  if (arguments[1] || arguments[1] === 0) {
-	    var index = arguments[1]
-	    if (index > arr.length) {
-	      index = arr.length;
-	    }
-	    return arr.slice((arr.length - index), arr.length)
-	  } else {
-	    return arr[arr.length - 1]
-	  }
-	}
-	_.last = Last1; 
+
     expect(_.last([1,2,3])).to.equal(3);
   });
 
@@ -52,25 +28,7 @@ describe("last", function() {
 
 describe("first", function() {
   it("should be able to pull out the first element of an array", function() {
-	var First1 = function (context, myParameter) {
-      var arr = []
-      if (Array.isArray(arguments[0])) {arr = (arguments[0]).slice()}
-	  else if (arguments[0].length === +arguments[0].length) {
-	    for (var i = 0; i < arguments[0].length; i++){
-	      arr.push(arguments[0][i])
-	    }
-	  }
-	  if (arguments[1] || arguments[1] === 0) {
-	    var index = arguments[1]
-	    if (index > arr.length) {
-	      index = arr.length;
-	    }
-	    return arr.slice(0, index)
-	  } else {
-	    return arr[0]
-	  }
-	}
-	_.first = First1; 
+	
     expect(_.first([1,2,3])).to.equal(1);
   });
 
@@ -91,16 +49,6 @@ describe("each", function() {
   it("should provide value and iteration count", function() {
     var letters = ['a', 'b', 'c'];
     var iterations = [];
-    var Each1 = function(obj, iterator, context) {
-      if (obj == null) return; 
-      if (obj.length === +obj.length) {
-        for (var i = 0; i < obj.length; i++) {
-          if(iterator.call(context, obj[i], i, obj)) return;
-		}
-	  }
-	};
-
-    _.each = Each1;
 
     _.each(letters, function(letter, index, collection) {
       iterations.push([letter, index, collection]);
@@ -121,15 +69,7 @@ describe("indexOf", function() {
   it("should be able to compute indexOf even when the native function is undefined", function() {
     var numbers = [1, 2, 3];
     numbers.indexOf = null;
-	var IndexOf1 = function (arr, item) {
-	  if (arr === null) return -1;
-	  var occ = 0; // Added this because had trouble returning -1
-	  for(var i = 0; i < arr.length; i++) {
-	    if (arr[i] === item) {occ += 1; return i;}
-	  }
-	  if (occ === 0) return -1;
-	};
-	_.indexOf = IndexOf1;
+
     expect(_.indexOf(numbers, 2)).to.be(1);
   });
 
@@ -160,17 +100,6 @@ describe("filter", function() {
     var isEven = function(num) {
       return num % 2 === 0;
     };
-	var Filter1 = function (arr, iterator, context) {
-	  var results = [];
-	  if (arr === null) return results;
-	  _.each(arr, function(value, index, list) {
-	    if (iterator.call(context, value, index, list)) 
-		  {results[results.length] = value;}
-	  });
-	  return results;
-	}
-
-	_.filter = Filter1;
 
     var evens = _.filter([1, 2, 3, 4, 5, 6], isEven);
     expect(evens).to.eql([2, 4, 6]);
@@ -190,19 +119,6 @@ describe("reject", function() {
   it("should reject all even numbers", function() {
     var isEven = function(num) { return num % 2 === 0; };
     
-	var Reject1 = function (arr, iterator, context) {
-	  var results = [];
-	  if (arr === null) return results;
-	  _.each(arr, function(value, index, list) {
-	    if (!iterator.call(context, value, index, list)) 
-		  {results[results.length] = value;}
-	  });
-	  return results;
-	}
-
-	_.reject = Reject1;
-
-
 	var odds = _.reject([1, 2, 3, 4, 5, 6], isEven);
     expect(odds).to.eql([1, 3, 5]);
   });
@@ -218,23 +134,6 @@ describe("reject", function() {
 describe("uniq", function() {
   it("should return all unique values contained in an unsorted array", function() {
     var list = [1, 2, 1, 3, 1, 4];
-
-	var Uniq1 = function (arr, iterator, context) {
-	  var results = [];
-	  var seen = [];
-	  var alreadyFound = false;
-	  _.each(arr, function (value, index) {
-	    for (var i = 0; i < seen.length; i++) {
-		  if (value === seen[i]) {alreadyFound = true;}
-		}
-		if (alreadyFound === false) {
-		  seen.push(value);
-		  results.push(arr[index]);
-		} else alreadyFound = false;
-	  });
-	  return results;
-	}
-	_.uniq = Uniq1;
 
     expect(_.uniq(list)).to.eql([1, 2, 3, 4]);
   });
@@ -254,18 +153,6 @@ describe("uniq", function() {
 
 describe("map", function() {
   it("should apply a function to every value in an array", function() {
-    
-	var Map1 = function (arr, iterator, context) {
-	  var results = [];
-	  if (arr === null) return results;
-	  _.each(arr, function(value, index, list) {
-	    //results[results.length] used to insert callback result as it iterates
-		results[results.length] = iterator.call(context, value, index, list);
-	  });
-	  return results;
-	}
-
-	_.map = Map1;
 
     var doubled = _.map([1, 2, 3], function(num) { return num * 2; });
     expect(doubled).to.eql([2, 4, 6]);
@@ -280,11 +167,6 @@ describe("pluck", function() {
       {name : 'curly', age : 50}
     ];
 
-	var Pluck1 = function (arr, key, context) {
-	  return _.map(arr, function(value) {return value[key];});
-	}
-	_.pluck = Pluck1;
-
     expect(_.pluck(people, 'name')).to.eql(['moe', 'curly']);
   });
 });
@@ -293,21 +175,6 @@ describe("pluck", function() {
 describe("invoke", function() {
   it("should sort the first array", function() {
     var lists = [[5, 1, 7], [3, 2, 1]];
-    
-    var Invoke1 = function (arr, func) {
-	//another one I've had a lot of trouble with...
-	  var isFunc = function (func) {
-	    return typeof func === 'function';
-	  }
-	  
-	  if (isFunc && func === "sort") { //patch for 'sort'
-	    return _.map(arr, function(value) {
-		  return value.sort();
-	    });
-	  }
-	}
-
-	_.invoke = Invoke1;
 	
 	var result = _.invoke(lists, 'sort');
 
@@ -325,20 +192,7 @@ describe("invoke", function() {
 describe("invoke with function reference", function() {
   it("should sort the first array", function() {
     var list = [[5, 1, 7], [3, 2, 1]];
-    
-	var Invoke2 = function (arr, func) {
-	  var args = arguments[2]
-	  var isFunc = function (func) {
-	    return typeof func === 'function';
-	  }
-	  return _.map(arr, function (value) {
-	    return (isFunc ? func: value[func]).apply(value, args);
-	  }); 
-	};
 
-	_.invoke = Invoke2;
-
-	
 	var result = _.invoke(list, Array.prototype.sort);
     expect(result[0]).to.eql([1, 5, 7]);
   });
@@ -353,20 +207,6 @@ describe("invoke with function reference", function() {
 
 describe("reduce", function() {
   it("should be able to sum up an array", function() {
-	var Reduce1 = function (arr, callback, initial) {
-	  var memo = null;
-	  if (arr === null) arr = [];
-	  _.each(arr, function(value, index, list) {
-	    if (!initial) {
-		initial = true
-		memo = 0;
-		}
-		memo = callback.call(context, memo, value, index, list);
-	  });
-	  return memo
-	}
-
-	_.reduce = Reduce1;
 
 	var callback = function(sum, num) {return sum + num; };
     var sum = _.reduce([1, 2, 3], callback, 0);
@@ -385,21 +225,6 @@ describe("reduce", function() {
 
 describe("contains", function() {
   it("should return true if a collection contains a user-specified value", function() {
-	var Contains1 = function (obj, target, context) {
-    var result = false;
-	  if (obj == null) return result;
-    //Following added because had trouble comparing object props
-     for(var prop in obj) {
-      if(obj.hasOwnProperty(prop) && obj[prop] === target) {
-          result = true;
-        }
-    }
-	  _.any(obj, function(value) {
-      if(target === value) result = true;
-    });
-    return !!result;
-	}
-	_.contains = Contains1;
 	
     expect(_.contains([1,2,3], 2)).to.equal(true);
     //evals to true without native function
@@ -414,16 +239,6 @@ describe("contains", function() {
 
 
 describe("every", function() {
-  var Every1 = function (arr, iterator, context) {
-    var result = true;
-    _.each(arr, function(value, index, list) {
-	  //if one fails to be the result, return false
-	  if (result != iterator.call(context, value, index, list)) result = false;
-	});
-	return result;
-  }
-
-  _.every = Every1;
 		
   var getValue = function(i) { return i; };
   var isEven = function(num) { return num % 2 === 0; };
@@ -478,21 +293,6 @@ describe("any", function() {
     Array.prototype.some = nativeSome;
   });
 
-  var Any1 = function (obj, iterator, context) {
-    //see if at least one item in array matches truth test.
-    if (!iterator){iterator = _.identity}
-    var result = false;
-    if (obj == null) return result;
-    //Not needed, but below uses native function if available:
-    if (nativeSome && obj.some === nativeSome) return obj.some(iterator, context);
-    _.each(obj, function(value, index, list) {
-      if (!!result != true) result = iterator.call(context, value, index, list)
-    });
-    return !!result; //should be true if at least one is true
-  }
-
-  _.any = Any1;
-
   it("should handle the empty set", function() {
     expect(_.any([])).to.equal(false);
   });
@@ -533,20 +333,6 @@ describe("any", function() {
 describe("extend", function() {
   it("should extend an object with the attributes of another", function() {
 
-    var Extend1 = function (obj, context) {
-	  //copy multiple source objects into one destination object 
-	  _.each(arguments, function (source) {
-	    if (source) {
-		  for (var prop in source) {
-		    obj[prop] = source[prop]
-		  }
-		}
-	  });
-	  return obj;
-	}
-
-	_.extend = Extend1
-
     var extended = _.extend({}, {a:'b'});
     expect(extended.a).to.equal('b');
   });
@@ -579,18 +365,6 @@ describe("extend", function() {
 
 
 describe("defaults", function() {
-  var Defaults1 = function (obj) {
-	_.each(arguments, function (source) {
-	  if (source) {
-	    for (var prop in source) {
-		  if (obj[prop] == null) obj[prop] = source[prop];
-		}
-	  }
-	});
-    return obj;
-  }
-
-  _.defaults = Defaults1;
 	
   var result, options;
 
@@ -618,18 +392,7 @@ describe("defaults", function() {
 
 describe("once", function() {
   it("should only run a user-defined function if it hasn't been run before", function() {
-    var Once1 = function (func) {
-	  var hasRun = false, memo
-	  return function () {
-	    if (hasRun) return memo;
-		hasRun = true;
-		memo = func.apply(this, arguments);
-		func = null;
-		return memo;
-	  }
-	}
-
-	_.once = Once1;
+    
 
     var num = 0;
     var increment = _.once(function() {
@@ -647,16 +410,7 @@ describe("memoize", function() {
   it("a memoized function should produce the same result when called with the same arguments", function() {
     //This won't resemble underscore.js w/hasher but I think 
 	//I can write this function in a way that resembles .once
-	var Memoize1 = function (func) {
-	  var memo;
-	  return function () {
-	    memo = func.apply(this, arguments);
-		return memo;
-	  };
-	}
-
-	_.memoize = Memoize1;
-	  
+	
 	var fib = function(n) {
       return n < 2 ? n : fib(n - 1) + fib(n - 2);
     };
@@ -691,11 +445,6 @@ describe("delay", function() {
   });
 
   it("should only execute the function after the specified wait time", function() {
-    var Delay1 = function(func, interval) {
-	  var args = Array.prototype.slice.call(arguments, 2); //get args for func
-	  return setTimeout(function(){return func.apply(null, args);}, interval);
-	}
-	_.delay = Delay1;
 
 	  
 	_.delay(callback, 100);
@@ -715,24 +464,6 @@ describe("delay", function() {
 
 describe("shuffle", function() {
   it("should not modify the original object", function() {
-   
-	var Shuffle1 = function (arr, context) {
-	  var arr2 = arr;
-      //trying a shuffle method I found on stack overflow.
-	  //underscore.js uses its own shuffle method _.shuffle
-	  var counter = arr.length, temp, index;
-      while (counter > 0) {
-	    //swap last element with a random element
-	    index = Math.floor(Math.random() * counter);
-	    temp = arr2[counter];
-	    arr2[counter] = arr2[index];
-	    arr2[index] = temp;
-	    counter--;
-	  }
-	  return arr2; 
-	}
-
-	_.shuffle = Shuffle1;
 
 	//ORIGINAL: var numbers = _.range(10);
 	//commented out because _.range not implemented yet
