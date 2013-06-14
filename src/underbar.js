@@ -445,6 +445,12 @@ _.identity = function (value) {return value;}
   // Produce an array that contains every item shared between all the
   // passed-in arrays.
   _.intersection = function(array) {
+    var otherArrays = Array.prototype.slice.apply(arguments);
+    return _.filter(_.uniq(array), function(item){
+      return _.every(otherArrays, function(other) {
+        return _.indexOf(other, item) >= 0;
+      });
+    });
   };
 
   // Take the difference between one array and a number of other arrays.
