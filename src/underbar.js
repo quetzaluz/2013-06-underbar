@@ -456,6 +456,12 @@ _.identity = function (value) {return value;}
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    //I had trouble implementing this using filter, so used _.each:
+    var args = Array.prototype.slice.apply(arguments);
+    var otherArrays = _.flatten(args.slice(1));
+    return _.filter(array, function(value){
+      return !(_.contains(otherArrays, value)); 
+    });
   };
 
 

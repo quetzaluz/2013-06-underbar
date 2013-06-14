@@ -548,6 +548,7 @@ describe("flatten", function() {
   });
 });
 
+
 describe("intersection", function() {
   it("should take the set intersection of two arrays", function() {
     var stooges = ['moe', 'curly', 'larry'];
@@ -561,7 +562,7 @@ describe("intersection", function() {
     expect(_.intersection(args, leaders)).to.eql(['moe']);
   });
 });
-/*
+
 describe("difference", function() {
   it("should return the difference between two arrays", function() {
     var diff = _.difference([1,2,3], [2,30,40]);
@@ -573,96 +574,3 @@ describe("difference", function() {
     expect(result).to.eql([3, 4]);
   });
 });
-
-*/
-
-//Because I had so much trouble in finding equality in object
-//values for _.contains, I've implemented code neccessary for
-//_.isEqual to allow for deep comparisons
-
-var eq = function(a, b, aStack, bStack) {
-
-if (a === b) return a !== 0 || 1 / a == 1 / b;
-
-if (a == null || b == null) return a === b;
-
-if (a instanceof _) a = a._wrapped;
-    if (b instanceof _) b = b._wrapped;
-
-var className = toString.call(a);
-    if (className != toString.call(b)) return false;
-    switch (className) {
-
-case '[object String]':
- 
-return a == String(b);
-      case '[object Number]':
- 
-return a != +a ? b != +b : (a == 0 ? 1 / a == 1 / b : a == +b);
-      case '[object Date]':
-      case '[object Boolean]':
- 
-return +a == +b;
- 
-case '[object RegExp]':
-        return a.source == b.source &&
-               a.global == b.global &&
-               a.multiline == b.multiline &&
-               a.ignoreCase == b.ignoreCase;
-    }
-    if (typeof a != 'object' || typeof b != 'object') return false;
- 
-var length = aStack.length;
-    while (length--) {
- 
-if (aStack[length] == a) return bStack[length] == b;
-    }
- 
-aStack.push(a);
-    bStack.push(b);
-    var size = 0, result = true;
-
- 
-if (className == '[object Array]') {
- 
-size = a.length;
-      result = size == b.length;
-      if (result) {
- 
-while (size--) {
-          if (!(result = eq(a[size], b[size], aStack, bStack))) break;
-        }
-      }
-    } else {
- 
-var aCtor = a.constructor, bCtor = b.constructor;
-      if (aCtor !== bCtor && !(_.isFunction(aCtor) && (aCtor instanceof aCtor) &&
-                               _.isFunction(bCtor) && (bCtor instanceof bCtor))) {
-        return false;
-      }
- 
-for (var key in a) {
-        if (_.has(a, key)) {
-
-size++;
- 
-if (!(result = _.has(b, key) && eq(a[key], b[key], aStack, bStack))) break;
-        }
-      }
- 
-if (result) {
-        for (key in b) {
-          if (_.has(b, key) && !(size--)) break;
-        }
-        result = !size;
-      }
-    }
- 
-aStack.pop();
-    bStack.pop();
-    return result;
-  };
- 
-_.isEqual = function(a, b) {
-    return eq(a, b, [], []);
-  };
