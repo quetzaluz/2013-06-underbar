@@ -386,6 +386,10 @@ _.identity = function (value) {return value;}
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
     //Check if iterator is string, handle appropriately.
+    var lookupIterator = function(value) {
+      return (typeof value === 'function') ? value : function (obj) {return obj[value];}
+      }
+    var iterator = lookupIterator(iterator);
     if (typeof iterator === 'string') {
       if (iterator === 'length') {
         iterator = function (obj) {return obj.length;}
@@ -483,6 +487,29 @@ _.identity = function (value) {return value;}
   //
   // See README for details
   _.throttle = function(func, wait) {
+    //basing this largely off the underscore source again
+    var context, args, timeout, result;
+    var previous = 0;
+    var later = function () {
+      previous = new Date;
+      timeout = null;
+      result = func.apply(context, args);
+    };
+    return function() {
+      var now = new Date;
+      var remaining = wait - (now - previous);
+      context = this;
+      args = arguments;
+      if (remaining <= 0) {
+        clearTimeout(timeout);
+        timeout = null;
+        previous = now;
+        result = func.apply(context, args);
+      } else if (!timeout) {
+        timeout = setTimeout(later, remaining);
+      }
+      return result;
+    }
   };
 
 }).call(this);
