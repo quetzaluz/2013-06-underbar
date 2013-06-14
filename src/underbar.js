@@ -385,7 +385,28 @@ _.identity = function (value) {return value;}
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
-  };
+    //Check if iterator is string, handle appropriately.
+    if (typeof iterator === 'string') {
+      if (iterator === 'length') {
+        iterator = function (obj) {return obj.length;}
+      }
+    };
+    return _.pluck(_.map(collection, function(value, index, list){
+      return {
+        value: value,
+        index: index,
+        criteria: iterator.call(context, value, index, list)
+      };
+    }).sort(function(left, right) {
+      var a = left.criteria;
+      var b = right.criteria;
+      if (a !== b) {
+        if (a > b || a === void 0) return 1;
+        if (a < b || b === void 0) return -1;
+      }
+      return left.index , right.index ? -1 : 1;
+    }), 'value');
+    };
 
   // Zip together two or more arrays with elements of the same index
   // going together.

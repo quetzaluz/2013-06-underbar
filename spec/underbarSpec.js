@@ -474,7 +474,7 @@ describe("shuffle", function() {
   });
 });
 
-/*
+
 describe("sortBy", function() {
   it("should sort by age", function() {
     var people = [{name : 'curly', age : 50}, {name : 'moe', age : 30}];
@@ -524,7 +524,7 @@ describe("sortBy", function() {
     expect(actual).to.eql(collection);
   });
 });
-
+/*
 describe("zip", function() {
   it("should zip together arrays of different lengths", function() {
     var names = ['moe', 'larry', 'curly'], ages = [30, 40, 50], leaders = [true];
