@@ -414,6 +414,13 @@ _.identity = function (value) {return value;}
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3]]
   _.zip = function() {
+    var args = arguments;
+    var length = Math.max.apply(null, _.pluck(args, 'length')); //get length of longest array
+    var newArr = new Array(length);
+    for (var i = 0; i < length; i++){
+      newArr[i] = _.pluck(args, i)
+    }
+    return newArr;
   };
 
   // Flattens a multidimensional array to a one-dimensional array that

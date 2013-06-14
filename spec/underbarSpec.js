@@ -524,7 +524,7 @@ describe("sortBy", function() {
     expect(actual).to.eql(collection);
   });
 });
-/*
+
 describe("zip", function() {
   it("should zip together arrays of different lengths", function() {
     var names = ['moe', 'larry', 'curly'], ages = [30, 40, 50], leaders = [true];
@@ -535,7 +535,7 @@ describe("zip", function() {
     ]);
   });
 });
-
+/*
 describe("flatten", function() {
   it("can flatten nested arrays", function() {
     var nestedArray = [1, [2], [3, [[[4]]]]];
