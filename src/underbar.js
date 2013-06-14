@@ -429,6 +429,17 @@ _.identity = function (value) {return value;}
   // Hints: Use Array.isArray to check if something is an array
   //
   _.flatten = function(nestedArray, result) {
+    //Tried to accomplish this with concat at first, ended up
+    //having to use iteration.
+    if (!result) {var result = new Array();}
+    _.each(nestedArray, function(value) {
+      if(Array.isArray(value)) {
+         _.flatten(value, result);       
+      } else {
+         result.push(value);
+      } 
+    });
+    return result;
   };
 
   // Produce an array that contains every item shared between all the

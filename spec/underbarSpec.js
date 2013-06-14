@@ -535,7 +535,7 @@ describe("zip", function() {
     ]);
   });
 });
-/*
+
 describe("flatten", function() {
   it("can flatten nested arrays", function() {
     var nestedArray = [1, [2], [3, [[[4]]]]];
@@ -561,7 +561,7 @@ describe("intersection", function() {
     expect(_.intersection(args, leaders)).to.eql(['moe']);
   });
 });
-
+/*
 describe("difference", function() {
   it("should return the difference between two arrays", function() {
     var diff = _.difference([1,2,3], [2,30,40]);
